@@ -11,8 +11,10 @@ public class GT3Controller : MonoBehaviour
     #region Components
 
     private Rigidbody rb;
+    private GT3Engine engine;
+    private GT3Transmission transmission;
 
-    [Header("Wheel Colliders")]
+    [Header("Wheels")]
     [SerializeField] private WheelCollider frontLeft;
     [SerializeField] private WheelCollider frontRight;
     [SerializeField] private WheelCollider rearLeft;
@@ -20,10 +22,7 @@ public class GT3Controller : MonoBehaviour
 
     #endregion
 
-    #region Vehicle Settings
-
-    [Header("Engine")]
-    [SerializeField] private float motorTorque = 900f;
+    #region Settings
 
     [Header("Brakes")]
     [SerializeField] private float brakeForce = 2500f;
@@ -32,8 +31,8 @@ public class GT3Controller : MonoBehaviour
     [SerializeField] private float maxSteerAngle = 25f;
 
     [Header("Center of Mass")]
-    [SerializeField]
-    private Vector3 centerOfMass = new Vector3(0f, -0.25f, 0f);
+    [SerializeField] private Vector3 centerOfMass =
+        new Vector3(0f, -0.25f, 0f);
 
     #endregion
 
@@ -43,16 +42,16 @@ public class GT3Controller : MonoBehaviour
     private float steering;
     private bool braking;
 
+    public bool IsCoasting => throttle <= 0.01f && !braking;
+
     #endregion
 
     #region Unity Methods
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-
-        ConfigureRigidbody();
-        ValidateWheels();
+        InitializeComponents();
+        ValidateComponents();
     }
 
     private void Update()
@@ -62,8 +61,10 @@ public class GT3Controller : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!enabled)
-            return;
+        transmission.UpdateShifting(Time.fixedDeltaTime);
+
+        UpdateEngine();
+        UpdateTransmission();
 
         ApplySteering();
         ApplyMotor();
@@ -74,14 +75,21 @@ public class GT3Controller : MonoBehaviour
 
     #region Initialization
 
-    private void ConfigureRigidbody()
+    private void InitializeComponents()
     {
+        rb = GetComponent<Rigidbody>();
+        engine = GetComponent<GT3Engine>();
+        transmission = GetComponent<GT3Transmission>();
+
         rb.centerOfMass = centerOfMass;
     }
 
-    private void ValidateWheels()
+    private void ValidateComponents()
     {
-        if (frontLeft != null &&
+        if (engine != null &&
+            transmission != null &&
+            transmission.enabled &&
+            frontLeft != null &&
             frontRight != null &&
             rearLeft != null &&
             rearRight != null)
@@ -90,7 +98,7 @@ public class GT3Controller : MonoBehaviour
         }
 
         Debug.LogError(
-            "GT3Controller: WheelColliders nao configurados!",
+            "GT3Controller: Componentes nao configurados!",
             this
         );
 
@@ -99,29 +107,37 @@ public class GT3Controller : MonoBehaviour
 
     #endregion
 
-    #region Input
+    #region Input Handling
 
     private void ReadInput()
     {
 #if ENABLE_INPUT_SYSTEM
 
-        Keyboard keyboard = Keyboard.current;
+        Keyboard kb = Keyboard.current;
 
-        if (keyboard == null)
+        if (kb == null)
         {
             ResetInput();
             return;
         }
 
-        throttle = keyboard.wKey.isPressed ? 1f : 0f;
+        throttle = kb.wKey.isPressed ? 1f : 0f;
 
         steering =
-            (keyboard.dKey.isPressed ? 1f : 0f) -
-            (keyboard.aKey.isPressed ? 1f : 0f);
+            (kb.dKey.isPressed ? 1f : 0f) -
+            (kb.aKey.isPressed ? 1f : 0f);
 
-        braking =
-            keyboard.sKey.isPressed ||
-            keyboard.spaceKey.isPressed;
+        braking = kb.sKey.isPressed ||
+                  kb.spaceKey.isPressed;
+
+        if (!transmission.IsAutomatic)
+        {
+            if (kb.eKey.wasPressedThisFrame)
+                transmission.ShiftUp();
+
+            if (kb.qKey.wasPressedThisFrame)
+                transmission.ShiftDown();
+        }
 
 #elif ENABLE_LEGACY_INPUT_MANAGER
 
@@ -134,6 +150,15 @@ public class GT3Controller : MonoBehaviour
         braking =
             Input.GetKey(KeyCode.S) ||
             Input.GetKey(KeyCode.Space);
+
+        if (!transmission.IsAutomatic)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+                transmission.ShiftUp();
+
+            if (Input.GetKeyDown(KeyCode.Q))
+                transmission.ShiftDown();
+        }
 
 #else
 
@@ -151,27 +176,58 @@ public class GT3Controller : MonoBehaviour
 
     #endregion
 
-    #region Steering
+    #region Engine
 
-    private void ApplySteering()
+    private void UpdateEngine()
     {
-        float steerAngle = steering * maxSteerAngle;
+        float wheelRPM =
+            (rearLeft.rpm + rearRight.rpm) * 0.5f;
 
-        frontLeft.steerAngle = steerAngle;
-        frontRight.steerAngle = steerAngle;
+        engine.UpdateRPM(
+            wheelRPM,
+            transmission.TotalRatio
+        );
+    }
+
+    private void ApplyMotor()
+    {
+        float wheelTorque = 0f;
+
+        if (!braking && !transmission.IsShifting)
+        {
+            float engineTorque =
+                engine.GetEngineTorque(throttle);
+
+            wheelTorque =
+                transmission.GetWheelTorque(engineTorque);
+        }
+
+        rearLeft.motorTorque = wheelTorque;
+        rearRight.motorTorque = wheelTorque;
     }
 
     #endregion
 
-    #region Engine
+    #region Transmission
 
-    private void ApplyMotor()
+    private void UpdateTransmission()
     {
-        float torque = braking ? 0f : throttle * motorTorque;
+        transmission.UpdateAutomaticShifting(
+            engine.CurrentRPM,
+            throttle
+        );
+    }
 
-        // Tracao traseira (RWD).
-        rearLeft.motorTorque = torque;
-        rearRight.motorTorque = torque;
+    #endregion
+
+    #region Steering
+
+    private void ApplySteering()
+    {
+        float angle = steering * maxSteerAngle;
+
+        frontLeft.steerAngle = angle;
+        frontRight.steerAngle = angle;
     }
 
     #endregion
@@ -180,13 +236,13 @@ public class GT3Controller : MonoBehaviour
 
     private void ApplyBrakes()
     {
-        float appliedBrake = braking ? brakeForce : 0f;
+        float torque = braking ? brakeForce : 0f;
 
-        frontLeft.brakeTorque = appliedBrake;
-        frontRight.brakeTorque = appliedBrake;
+        frontLeft.brakeTorque = torque;
+        frontRight.brakeTorque = torque;
 
-        rearLeft.brakeTorque = appliedBrake;
-        rearRight.brakeTorque = appliedBrake;
+        rearLeft.brakeTorque = torque;
+        rearRight.brakeTorque = torque;
     }
 
     #endregion
