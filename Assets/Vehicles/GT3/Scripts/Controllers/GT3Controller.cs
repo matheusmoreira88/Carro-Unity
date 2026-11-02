@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 #if ENABLE_INPUT_SYSTEM
@@ -29,6 +28,9 @@ public class GT3Controller : MonoBehaviour
 
     [Header("Steering")]
     [SerializeField] private float maxSteerAngle = 25f;
+    [SerializeField] private bool useAckermannSteering = true;
+    [SerializeField] private float wheelBase = 2.8f;
+    [SerializeField] private float frontTrack = 2.0f;
 
     [Header("Center of Mass")]
     [SerializeField] private Vector3 centerOfMass =
@@ -224,10 +226,52 @@ public class GT3Controller : MonoBehaviour
 
     private void ApplySteering()
     {
-        float angle = steering * maxSteerAngle;
+        if (!useAckermannSteering)
+        {
+            float angle = steering * maxSteerAngle;
 
-        frontLeft.steerAngle = angle;
-        frontRight.steerAngle = angle;
+            frontLeft.steerAngle = angle;
+            frontRight.steerAngle = angle;
+            return;
+        }
+
+        ApplyAckermannSteering();
+    }
+
+    private void ApplyAckermannSteering()
+    {
+        float steerInput = Mathf.Clamp(steering, -1f, 1f);
+
+        if (Mathf.Abs(steerInput) < 0.001f)
+        {
+            frontLeft.steerAngle = 0f;
+            frontRight.steerAngle = 0f;
+            return;
+        }
+
+        float baseAngleDeg = Mathf.Abs(steerInput) * maxSteerAngle;
+        float baseAngleRad = baseAngleDeg * Mathf.Deg2Rad;
+
+        float turnRadius = wheelBase / Mathf.Tan(baseAngleRad);
+
+        float innerDenominator = Mathf.Max(0.01f, turnRadius - frontTrack * 0.5f);
+        float outerDenominator = Mathf.Max(0.01f, turnRadius + frontTrack * 0.5f);
+
+        float innerAngle = Mathf.Atan(wheelBase / innerDenominator) * Mathf.Rad2Deg;
+        float outerAngle = Mathf.Atan(wheelBase / outerDenominator) * Mathf.Rad2Deg;
+
+        if (steerInput > 0f)
+        {
+            // Curva para a direita
+            frontRight.steerAngle = innerAngle;
+            frontLeft.steerAngle = outerAngle;
+        }
+        else
+        {
+            // Curva para a esquerda
+            frontLeft.steerAngle = -innerAngle;
+            frontRight.steerAngle = -outerAngle;
+        }
     }
 
     #endregion

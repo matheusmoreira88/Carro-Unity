@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 6735940}
   - component: {fileID: 6735942}
   - component: {fileID: 6735943}
+  - component: {fileID: 6735944}
   m_Layer: 0
   m_Name: FrontRight
   m_TagString: Untagged
@@ -223,6 +224,27 @@ MonoBehaviour:
   showSlipVectors: 1
   visualWidth: 0.26
   slipVectorScale: 0.7
+--- !u!114 &6735944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6735939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3c82a39b1fd3e40b68e29d3d4af564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelDebugVisual
+  startVisible: 0
+  wheelWidth: 0.26
+  ringThickness: 0.04
+  directionLength: 1.6
+  arrowWidth: 0.045
+  suspensionBallSize: 0.28
+  fullRedLoad: 1.8
+  showSlip: 1
+  slipScale: 0.75
 --- !u!1 &138332756
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +303,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 003a5592f58ebdb40a0f5732b1cc5085, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -660,7 +682,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 003a5592f58ebdb40a0f5732b1cc5085, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -704,6 +726,7 @@ GameObject:
   - component: {fileID: 818043543}
   - component: {fileID: 818043545}
   - component: {fileID: 818043546}
+  - component: {fileID: 818043547}
   m_Layer: 0
   m_Name: RearRight
   m_TagString: Untagged
@@ -796,6 +819,27 @@ MonoBehaviour:
   showSlipVectors: 1
   visualWidth: 0.26
   slipVectorScale: 0.7
+--- !u!114 &818043547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818043542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3c82a39b1fd3e40b68e29d3d4af564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelDebugVisual
+  startVisible: 0
+  wheelWidth: 0.26
+  ringThickness: 0.04
+  directionLength: 1.6
+  arrowWidth: 0.045
+  suspensionBallSize: 0.28
+  fullRedLoad: 1.8
+  showSlip: 1
+  slipScale: 0.75
 --- !u!1 &827749530
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,7 +898,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 003a5592f58ebdb40a0f5732b1cc5085, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -898,6 +942,7 @@ GameObject:
   - component: {fileID: 868518403}
   - component: {fileID: 868518405}
   - component: {fileID: 868518406}
+  - component: {fileID: 868518407}
   m_Layer: 0
   m_Name: RearLeft
   m_TagString: Untagged
@@ -990,6 +1035,27 @@ MonoBehaviour:
   showSlipVectors: 1
   visualWidth: 0.26
   slipVectorScale: 0.7
+--- !u!114 &868518407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 868518402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3c82a39b1fd3e40b68e29d3d4af564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelDebugVisual
+  startVisible: 0
+  wheelWidth: 0.26
+  ringThickness: 0.04
+  directionLength: 1.6
+  arrowWidth: 0.045
+  suspensionBallSize: 0.28
+  fullRedLoad: 1.8
+  showSlip: 1
+  slipScale: 0.75
 --- !u!1 &1286920339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,6 +1250,7 @@ GameObject:
   - component: {fileID: 1589708934}
   - component: {fileID: 1589708936}
   - component: {fileID: 1589708937}
+  - component: {fileID: 1589708938}
   m_Layer: 0
   m_Name: FrontLeft
   m_TagString: Untagged
@@ -1276,6 +1343,27 @@ MonoBehaviour:
   showSlipVectors: 1
   visualWidth: 0.26
   slipVectorScale: 0.7
+--- !u!114 &1589708938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589708933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3c82a39b1fd3e40b68e29d3d4af564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelDebugVisual
+  startVisible: 0
+  wheelWidth: 0.26
+  ringThickness: 0.04
+  directionLength: 1.6
+  arrowWidth: 0.045
+  suspensionBallSize: 0.28
+  fullRedLoad: 1.8
+  showSlip: 1
+  slipScale: 0.75
 --- !u!1 &1735473398
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,7 +1422,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 003a5592f58ebdb40a0f5732b1cc5085, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2048,6 +2136,7 @@ GameObject:
   - component: {fileID: 1870017000}
   - component: {fileID: 1870016999}
   - component: {fileID: 1870017001}
+  - component: {fileID: 1870017002}
   m_Layer: 0
   m_Name: GT3_Prototype
   m_TagString: Untagged
@@ -2073,6 +2162,9 @@ MonoBehaviour:
   rearRight: {fileID: 818043543}
   brakeForce: 2500
   maxSteerAngle: 25
+  useAckermannSteering: 1
+  wheelBase: 2.8
+  frontTrack: 2
   centerOfMass: {x: 0, y: -0.25, z: 0}
 --- !u!54 &1870016997
 Rigidbody:
@@ -2235,6 +2327,19 @@ MonoBehaviour:
   engineBrakingTorque: 40
   wheelRadius: 0.34
   rpmReference: 6000
+--- !u!114 &1870017002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870016995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 109668d46bdecd84da613fdc1f92b1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VehicleDebugToggle
+  startVisible: 0
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
@@ -2364,7 +2469,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 225473c83ae480e4fa3f9b7c8006dbc5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
